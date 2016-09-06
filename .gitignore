@@ -1,0 +1,8 @@
+/build
+local.properties
+proguard-rules.pro
+gradlew
+*.bat
+android-storage-devices.iml
+/.idea
+/.gradle
