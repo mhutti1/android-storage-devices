@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class StorageDeviceUtils {
   private static ArrayList<String> mStorageDevices;
 
-  public static ArrayList<String> getStorageDevices() {
+  public static ArrayList<StorageDevice> getStorageDevices() {
     mStorageDevices = new ArrayList<>();
 
     // Add default sd-card location
@@ -39,9 +39,7 @@ public class StorageDeviceUtils {
     readVoldFile();
 
     // Check all devices exist and we can write to them
-    checkStorageValid();
-
-    return mStorageDevices;
+    return checkStorageValid();
   }
 
   private static void readVoldFile() {
@@ -68,13 +66,13 @@ public class StorageDeviceUtils {
     }
   }
 
-  private static void checkStorageValid() {
-    ArrayList<String> activeDevices = new ArrayList<>();
+  private static ArrayList<StorageDevice> checkStorageValid() {
+    ArrayList<StorageDevice> activeDevices = new ArrayList<>();
     for (String device : mStorageDevices) {
       File devicePath = new File(device);
       if (devicePath.exists() && devicePath.isDirectory() && devicePath.canWrite())
-        activeDevices.add(device);
+        activeDevices.add(new StorageDevice(device));
     }
-    mStorageDevices = activeDevices;
+    return activeDevices;
   }
 }

@@ -25,20 +25,44 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class StorageSelectDialog extends DialogFragment{
+import java.util.ArrayList;
+import java.util.List;
+
+public class StorageSelectDialog extends DialogFragment implements ListView.OnItemClickListener{
+
+  private StorageSelectArrayAdapter mAdapter;
+
+  private OnSelectListener mOnSelectListener;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.storage_select_dialog, container, false);
     getDialog().setTitle("Simple Dialog");
     ListView listView = (ListView) rootView.findViewById(R.id.device_list);
-    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-        android.R.layout.simple_list_item_1, StorageDeviceUtils.getStorageDevices());
-    listView.setAdapter(adapter);
+    mAdapter = new StorageSelectArrayAdapter(getActivity(),0,StorageDeviceUtils.getStorageDevices());
+    listView.setAdapter(mAdapter);
+    listView.setOnItemClickListener(this);
     return rootView;
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    if (mOnSelectListener != null)
+      mOnSelectListener.selectionCallback(mAdapter.getItem(position));
+    dismiss();
+  }
+
+  public void setOnSelectListener(OnSelectListener selectListener){
+    mOnSelectListener = selectListener;
+  }
+
+  public interface OnSelectListener {
+    // you can define any parameter as per your requirement
+    public void selectionCallback(StorageDevice s);
   }
 }
