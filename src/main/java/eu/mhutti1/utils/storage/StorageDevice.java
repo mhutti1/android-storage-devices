@@ -33,6 +33,10 @@ public class StorageDevice {
     mFile = new File(path);
   }
 
+  public StorageDevice(File file){
+    mFile = file;
+  }
+
   public String getName(){
     return mFile.getPath();
   }

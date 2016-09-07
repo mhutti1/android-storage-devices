@@ -48,7 +48,7 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
     TextView title = (TextView) rootView.findViewById(R.id.title);
     title.setText(mTitle);
     ListView listView = (ListView) rootView.findViewById(R.id.device_list);
-    mAdapter = new StorageSelectArrayAdapter(getActivity(),0,StorageDeviceUtils.getStorageDevices());
+    mAdapter = new StorageSelectArrayAdapter(getActivity(),0,StorageDeviceUtils.getStorageDevices(getActivity()));
     listView.setAdapter(mAdapter);
     listView.setOnItemClickListener(this);
     return rootView;

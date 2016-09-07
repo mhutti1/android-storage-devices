@@ -19,7 +19,10 @@
 
 package eu.mhutti1.utils.storage;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.FragmentManager;
+import android.os.Build;
 import android.support.v4.app.FragmentTransaction;
 
 import java.io.BufferedReader;
@@ -32,40 +35,17 @@ import java.util.ArrayList;
 public class StorageDeviceUtils {
   private static ArrayList<String> mStorageDevices;
 
-  public static ArrayList<StorageDevice> getStorageDevices() {
+  @TargetApi(Build.VERSION_CODES.KITKAT)
+  public static ArrayList<StorageDevice> getStorageDevices(Activity activity) {
     mStorageDevices = new ArrayList<>();
 
-    // Add default sd-card location
-    mStorageDevices.add("/mnt/sdcard");
+    for (File file : activity.getExternalFilesDirs("")){
+      mStorageDevices.add(file.getPath());
+    }
 
-    // Check for other devices
-    readVoldFile();
 
     // Check all devices exist and we can write to them
     return checkStorageValid();
-  }
-
-  private static void readVoldFile() {
-    try {
-      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream("/system/etc/vold.fstab")));
-
-      for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
-        if (line.startsWith("dev_mount")) {
-          String word = line.split(" ")[2];
-
-          if (word.contains(":"))
-            word = word.substring(0, word.indexOf(":"));
-
-          if (word.contains("usb"))
-            continue;
-
-          if (!mStorageDevices.contains(word))
-            mStorageDevices.add(line);
-        }
-      }
-
-    } catch (Exception e) {
-    }
   }
 
   private static ArrayList<StorageDevice> checkStorageValid() {
