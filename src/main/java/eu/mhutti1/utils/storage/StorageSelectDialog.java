@@ -21,6 +21,7 @@ package eu.mhutti1.utils.storage;
 
 
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,10 +40,13 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
 
   private OnSelectListener mOnSelectListener;
 
+  private String mTitle;
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.storage_select_dialog, container, false);
-    getDialog().setTitle("Simple Dialog");
+    TextView title = (TextView) rootView.findViewById(R.id.title);
+    title.setText(mTitle);
     ListView listView = (ListView) rootView.findViewById(R.id.device_list);
     mAdapter = new StorageSelectArrayAdapter(getActivity(),0,StorageDeviceUtils.getStorageDevices());
     listView.setAdapter(mAdapter);
@@ -64,5 +68,11 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
   public interface OnSelectListener {
     // you can define any parameter as per your requirement
     public void selectionCallback(StorageDevice s);
+  }
+
+  @Override
+  public void show (FragmentManager fm, String text){
+    mTitle = text;
+    super.show(fm,text);
   }
 }

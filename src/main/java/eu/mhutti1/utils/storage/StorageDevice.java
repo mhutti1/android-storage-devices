@@ -56,12 +56,12 @@ public class StorageDevice {
     long Eb = Pb * 1024;
 
     if (size <  Kb)                 return floatForm(        size     ) + " byte";
-    if (size >= Kb && size < Mb)    return floatForm((double)size / Kb) + " Kb";
-    if (size >= Mb && size < Gb)    return floatForm((double)size / Mb) + " Mb";
-    if (size >= Gb && size < Tb)    return floatForm((double)size / Gb) + " Gb";
-    if (size >= Tb && size < Pb)    return floatForm((double)size / Tb) + " Tb";
-    if (size >= Pb && size < Eb)    return floatForm((double)size / Pb) + " Pb";
-    if (size >= Eb)                 return floatForm((double)size / Eb) + " Eb";
+    if (size >= Kb && size < Mb)    return floatForm((double)size / Kb) + " KB";
+    if (size >= Mb && size < Gb)    return floatForm((double)size / Mb) + " MB";
+    if (size >= Gb && size < Tb)    return floatForm((double)size / Gb) + " GB";
+    if (size >= Tb && size < Pb)    return floatForm((double)size / Tb) + " TB";
+    if (size >= Pb && size < Eb)    return floatForm((double)size / Pb) + " PB";
+    if (size >= Eb)                 return floatForm((double)size / Eb) + " EB";
 
     return "???";
   }

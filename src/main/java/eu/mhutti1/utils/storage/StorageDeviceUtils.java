@@ -19,6 +19,9 @@
 
 package eu.mhutti1.utils.storage;
 
+import android.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,7 +65,6 @@ public class StorageDeviceUtils {
       }
 
     } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 
