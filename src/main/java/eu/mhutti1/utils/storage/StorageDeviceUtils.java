@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 
 import java.io.BufferedReader;
@@ -35,12 +36,16 @@ import java.util.ArrayList;
 public class StorageDeviceUtils {
   private static ArrayList<String> mStorageDevices;
 
-  @TargetApi(Build.VERSION_CODES.KITKAT)
   public static ArrayList<StorageDevice> getStorageDevices(Activity activity) {
     mStorageDevices = new ArrayList<>();
 
-    for (File file : activity.getExternalFilesDirs("")){
-      mStorageDevices.add(file.getPath());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      for (File file : activity.getExternalFilesDirs("")){
+        mStorageDevices.add(file.getPath());
+      }
+    } else {
+      mStorageDevices.add(Environment.getExternalStorageDirectory().getPath());
+      mStorageDevices.add(Environment.getRootDirectory().getPath());
     }
 
 
@@ -50,10 +55,14 @@ public class StorageDeviceUtils {
 
   private static ArrayList<StorageDevice> checkStorageValid() {
     ArrayList<StorageDevice> activeDevices = new ArrayList<>();
+    ArrayList<Long> deviceSizes = new ArrayList<>();
     for (String device : mStorageDevices) {
       File devicePath = new File(device);
-      if (devicePath.exists() && devicePath.isDirectory() && devicePath.canWrite())
-        activeDevices.add(new StorageDevice(device));
+      StorageDevice storageDevice = new StorageDevice(device);
+      if (devicePath.exists() && devicePath.isDirectory() && devicePath.canWrite() && !deviceSizes.contains(storageDevice)) {
+        activeDevices.add(storageDevice);
+        deviceSizes.add(storageDevice.getBytes());
+      }
     }
     return activeDevices;
   }

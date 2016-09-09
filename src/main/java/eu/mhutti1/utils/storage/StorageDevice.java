@@ -50,6 +50,15 @@ public class StorageDevice {
     }
   }
 
+  public Long getBytes(){
+    StatFs statFs = new StatFs(mFile.getPath());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      return statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong();
+    } else {
+      return Long.valueOf(statFs.getBlockSize() *  statFs.getAvailableBlocks());
+    }
+  }
+
   public static String bytesToHuman (long size)
   {
     long Kb = 1  * 1024;
