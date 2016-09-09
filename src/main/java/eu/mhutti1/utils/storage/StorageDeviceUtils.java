@@ -45,7 +45,7 @@ public class StorageDeviceUtils {
       }
     } else {
       mStorageDevices.add(Environment.getExternalStorageDirectory().getPath());
-      mStorageDevices.add(Environment.getRootDirectory().getPath());
+      mStorageDevices.add(activity.getFilesDir().getPath());
     }
 
 
