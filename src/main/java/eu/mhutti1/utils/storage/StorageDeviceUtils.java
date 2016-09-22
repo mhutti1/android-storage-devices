@@ -40,8 +40,10 @@ public class StorageDeviceUtils {
     mStorageDevices = new ArrayList<>();
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      for (File file : activity.getExternalFilesDirs("")){
-        mStorageDevices.add(file.getPath());
+      for (File file : activity.getExternalFilesDirs("")) {
+        if (file != null) {
+          mStorageDevices.add(file.getPath());
+        }
       }
     } else {
       mStorageDevices.add(Environment.getExternalStorageDirectory().getPath());
