@@ -39,15 +39,39 @@ public class StorageDeviceUtils {
   public static ArrayList<StorageDevice> getStorageDevices(Activity activity) {
     mStorageDevices = new ArrayList<>();
 
+    // Add as many possible mount points as we know about
+    mStorageDevices.add(Environment.getExternalStorageDirectory().getPath());
+    mStorageDevices.add(activity.getFilesDir().getPath());
+    mStorageDevices.add("/storage/sdcard1");
+    mStorageDevices.add("/storage/extsdcard");
+    mStorageDevices.add("/storage/sdcard0/external_sdcard");
+    mStorageDevices.add("/mnt/sdcard/external_sd");
+    mStorageDevices.add("/mnt/external_sd");
+    mStorageDevices.add("/mnt/media_rw/sdcard1");
+    mStorageDevices.add("/removable/microsd");
+    mStorageDevices.add("/mnt/emmc");
+    mStorageDevices.add("/storage/external_SD");
+    mStorageDevices.add("/storage/ext_sd");
+    mStorageDevices.add("/storage/removable/sdcard1");
+    mStorageDevices.add("/data/sdext");
+    mStorageDevices.add("/data/sdext2");
+    mStorageDevices.add("/data/sdext3");
+    mStorageDevices.add("/data/sdext2");
+    mStorageDevices.add("/data/sdext3");
+    mStorageDevices.add("/data/sdext4");
+    mStorageDevices.add("/sdcard");
+    mStorageDevices.add("/sdcard1");
+    mStorageDevices.add("/sdcard2");
+    mStorageDevices.add("/storage/microsd");
+
+
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       for (File file : activity.getExternalFilesDirs("")) {
         if (file != null) {
           mStorageDevices.add(file.getPath());
         }
       }
-    } else {
-      mStorageDevices.add(Environment.getExternalStorageDirectory().getPath());
-      mStorageDevices.add(activity.getFilesDir().getPath());
     }
 
 
