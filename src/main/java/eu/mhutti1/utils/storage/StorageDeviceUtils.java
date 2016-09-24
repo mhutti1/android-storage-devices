@@ -40,7 +40,9 @@ public class StorageDeviceUtils {
     mStorageDevices = new ArrayList<>();
 
     // Add as many possible mount points as we know about
-    mStorageDevices.add(Environment.getExternalStorageDirectory().getPath());
+    mStorageDevices.add(generalisePath(Environment.getExternalStorageDirectory().getPath()));
+
+
     mStorageDevices.add(activity.getFilesDir().getPath());
     mStorageDevices.add("/storage/sdcard1");
     mStorageDevices.add("/storage/extsdcard");
@@ -69,7 +71,7 @@ public class StorageDeviceUtils {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       for (File file : activity.getExternalFilesDirs("")) {
         if (file != null) {
-          mStorageDevices.add(file.getPath());
+          mStorageDevices.add(generalisePath(file.getPath()));
         }
       }
     }
@@ -79,15 +81,24 @@ public class StorageDeviceUtils {
     return checkStorageValid();
   }
 
+  public static String generalisePath(String path){
+    int endIndex = path.lastIndexOf("/Android/data/");
+    if (endIndex != -1)
+    {
+      return path.substring(0, endIndex);
+    }
+    return path;
+  }
+
   private static ArrayList<StorageDevice> checkStorageValid() {
     ArrayList<StorageDevice> activeDevices = new ArrayList<>();
-    ArrayList<Long> deviceSizes = new ArrayList<>();
+    ArrayList<String> devicePaths = new ArrayList<>();
     for (String device : mStorageDevices) {
       File devicePath = new File(device);
       StorageDevice storageDevice = new StorageDevice(device);
-      if (devicePath.exists() && devicePath.isDirectory() && devicePath.canWrite() && !deviceSizes.contains(storageDevice)) {
+      if (devicePath.exists() && devicePath.isDirectory() && !devicePaths.contains(storageDevice.getCanonicalPath())) {
         activeDevices.add(storageDevice);
-        deviceSizes.add(storageDevice.getBytes());
+        devicePaths.add(storageDevice.getCanonicalPath());
       }
     }
     return activeDevices;

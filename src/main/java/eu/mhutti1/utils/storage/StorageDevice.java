@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.StatFs;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 public class StorageDevice {
@@ -39,6 +40,14 @@ public class StorageDevice {
 
   public String getName(){
     return mFile.getPath();
+  }
+
+  public String getCanonicalPath(){
+    try {
+      return mFile.getCanonicalPath();
+    } catch (IOException e) {
+      return mFile.getPath();
+    }
   }
 
   public String getSize(){
