@@ -36,11 +36,11 @@ import java.util.ArrayList;
 public class StorageDeviceUtils {
   private static ArrayList<String> mStorageDevices;
 
-  public static ArrayList<StorageDevice> getStorageDevices(Activity activity) {
+  public static ArrayList<StorageDevice> getStorageDevices(Activity activity, boolean writable) {
     mStorageDevices = new ArrayList<>();
 
     // Add as many possible mount points as we know about
-    mStorageDevices.add(generalisePath(Environment.getExternalStorageDirectory().getPath()));
+    mStorageDevices.add(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable));
 
 
     mStorageDevices.add(activity.getFilesDir().getPath());
@@ -71,17 +71,19 @@ public class StorageDeviceUtils {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       for (File file : activity.getExternalFilesDirs("")) {
         if (file != null) {
-          mStorageDevices.add(generalisePath(file.getPath()));
+          mStorageDevices.add(generalisePath(file.getPath(), writable));
         }
       }
     }
 
 
     // Check all devices exist and we can write to them
-    return checkStorageValid();
+    return checkStorageValid(writable);
   }
 
-  public static String generalisePath(String path){
+  public static String generalisePath(String path, boolean writable){
+    if (writable)
+      return path;
     int endIndex = path.lastIndexOf("/Android/data/");
     if (endIndex != -1)
     {
@@ -90,13 +92,13 @@ public class StorageDeviceUtils {
     return path;
   }
 
-  private static ArrayList<StorageDevice> checkStorageValid() {
+  private static ArrayList<StorageDevice> checkStorageValid(boolean writable) {
     ArrayList<StorageDevice> activeDevices = new ArrayList<>();
     ArrayList<String> devicePaths = new ArrayList<>();
     for (String device : mStorageDevices) {
       File devicePath = new File(device);
       StorageDevice storageDevice = new StorageDevice(device);
-      if (devicePath.exists() && devicePath.isDirectory() && !devicePaths.contains(storageDevice.getCanonicalPath())) {
+      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !devicePaths.contains(storageDevice.getCanonicalPath())) {
         activeDevices.add(storageDevice);
         devicePaths.add(storageDevice.getCanonicalPath());
       }
