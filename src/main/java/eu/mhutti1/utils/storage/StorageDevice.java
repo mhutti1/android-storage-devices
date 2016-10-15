@@ -23,8 +23,12 @@ import android.os.Build;
 import android.os.StatFs;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.sql.Array;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class StorageDevice {
 
@@ -40,14 +44,6 @@ public class StorageDevice {
 
   public String getName(){
     return mFile.getPath();
-  }
-
-  public String getCanonicalPath(){
-    try {
-      return mFile.getCanonicalPath();
-    } catch (IOException e) {
-      return mFile.getPath();
-    }
   }
 
   public String getSize(){
@@ -88,6 +84,29 @@ public class StorageDevice {
     return "???";
   }
 
+  /*public ArrayList<File> getDirectories() {
+    ArrayList<File> folders = new ArrayList<File>(Arrays.asList(mFile.listFiles(new FileFilter() {
+      @Override
+      public boolean accept(File file) {
+        return file.isDirectory();
+      }
+    })));
+    ArrayList<File> relativeFolders = new ArrayList<>();
+    for (File file : folders){
+      relativeFolders.add(new File(mFile.toURI().relativize(file.toURI()).getPath()));
+    }
+
+    return relativeFolders;
+  }*/
+
+  /*@Override
+  public boolean equals(Object obj) {
+    if (obj instanceof StorageDevice){
+      StorageDevice device = (StorageDevice) obj;
+      return device.getDirectories().containsAll(getDirectories());
+    }
+    return false;
+  }*/
 
   public static String floatForm (double d)
   {
