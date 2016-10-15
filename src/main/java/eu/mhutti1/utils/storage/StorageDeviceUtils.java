@@ -25,12 +25,16 @@ import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.accessibility.AccessibilityRecordCompat;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import static java.lang.Math.abs;
 
 
 public class StorageDeviceUtils {
@@ -94,15 +98,28 @@ public class StorageDeviceUtils {
 
   private static ArrayList<StorageDevice> checkStorageValid(boolean writable) {
     ArrayList<StorageDevice> activeDevices = new ArrayList<>();
-    ArrayList<String> devicePaths = new ArrayList<>();
+    ArrayList<StorageDevice> devicePaths = new ArrayList<>();
+    ArrayList<Long> sizes = new ArrayList<>();
     for (String device : mStorageDevices) {
       File devicePath = new File(device);
       StorageDevice storageDevice = new StorageDevice(device);
-      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !devicePaths.contains(storageDevice.getCanonicalPath())) {
+      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !contains(sizes, storageDevice.getBytes())) {
         activeDevices.add(storageDevice);
-        devicePaths.add(storageDevice.getCanonicalPath());
+        devicePaths.add(storageDevice);
+        sizes.add(storageDevice.getBytes());
       }
     }
     return activeDevices;
   }
+
+  private static boolean contains (ArrayList<Long> sizes, Long size){
+    for (Long l : sizes){
+      if (abs(l - size) < 10000) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
 }
