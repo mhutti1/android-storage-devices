@@ -51,7 +51,7 @@ public class StorageDevice {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       return String.valueOf(bytesToHuman(statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong()));
     } else {
-      return String.valueOf(bytesToHuman(statFs.getBlockSize() *  statFs.getAvailableBlocks()));
+      return String.valueOf(bytesToHuman((long) statFs.getBlockSize() *  (long) statFs.getAvailableBlocks()));
     }
   }
 
@@ -60,7 +60,7 @@ public class StorageDevice {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       return statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong();
     } else {
-      return Long.valueOf(statFs.getBlockSize() *  statFs.getAvailableBlocks());
+      return Long.valueOf((long) statFs.getBlockSize() *  (long) statFs.getAvailableBlocks());
     }
   }
 
@@ -69,7 +69,7 @@ public class StorageDevice {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       return statFs.getBlockSizeLong() *  statFs.getBlockCountLong();
     } else {
-      return Long.valueOf(statFs.getBlockSize() *  statFs.getBlockCount());
+      return Long.valueOf((long) statFs.getBlockSize() * (long) statFs.getBlockCount());
     }
   }
 
