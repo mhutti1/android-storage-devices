@@ -55,7 +55,7 @@ public class StorageDevice {
     }
   }
 
-  public Long getBytes(){
+  public Long getBytes() {
     StatFs statFs = new StatFs(mFile.getPath());
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       return statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong();
@@ -64,8 +64,16 @@ public class StorageDevice {
     }
   }
 
-  public static String bytesToHuman (long size)
-  {
+  public Long getTotalBytes() {
+    StatFs statFs = new StatFs((mFile.getPath()));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      return statFs.getBlockSizeLong() *  statFs.getBlockCountLong();
+    } else {
+      return Long.valueOf(statFs.getBlockSize() *  statFs.getBlockCount());
+    }
+  }
+
+  public static String bytesToHuman (long size) {
     long Kb = 1  * 1024;
     long Mb = Kb * 1024;
     long Gb = Mb * 1024;

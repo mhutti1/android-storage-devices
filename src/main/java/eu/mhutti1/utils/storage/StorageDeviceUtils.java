@@ -103,10 +103,10 @@ public class StorageDeviceUtils {
     for (String device : mStorageDevices) {
       File devicePath = new File(device);
       StorageDevice storageDevice = new StorageDevice(device);
-      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !contains(sizes, storageDevice.getBytes())) {
+      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !contains(sizes, storageDevice.getTotalBytes())) {
         activeDevices.add(storageDevice);
         devicePaths.add(storageDevice);
-        sizes.add(storageDevice.getBytes());
+        sizes.add(storageDevice.getTotalBytes());
       }
     }
     return activeDevices;
