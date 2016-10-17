@@ -23,6 +23,14 @@ public void selectionCallback(StorageDevice storageDevice) {
 }
 
 ```
+To get a list of storage devices available use:
+
+```Java
+// Writable
+ArrayList<StorageDevice> storageDevices = getStorageDevices(context, true);
+// Readable
+ArrayList<StorageDevice> storageDevices = getStorageDevices(context, false);
+```
 
 To add with jcenter add this to gradle:
 
