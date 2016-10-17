@@ -3,20 +3,20 @@ Get a list of writable storage locations in android.
 
 To use this. First create a StorageSelectDialog and bind a listener to it:
 
-```
+```Java
 StorageSelectDialog storageSelectDialog = new StorageSelectDialog();
 storageSelectDialog.setOnSelectListener(this);
 ```
 
 When it is time to show the dialog simply call:
-```
+```Java
 FragmentManager fm = getFragmentManager();
 storageSelectDialog.show(fm, "title");
 ```
 
-You should implement StorageSelectDialog.OnSelectListener and recieve the selected device with:
+You should implement StorageSelectDialog.OnSelectListener and receive the selected device with:
 
-```
+```Java
 @Override
 public void selectionCallback(StorageDevice storageDevice) {
 	Do something here
@@ -26,6 +26,6 @@ public void selectionCallback(StorageDevice storageDevice) {
 
 To add with jcenter add this to gradle:
 
-```
+```Gradle
 compile 'eu.mhutti1.utils.storage:android-storage-devices:0.4.1'
 ```
