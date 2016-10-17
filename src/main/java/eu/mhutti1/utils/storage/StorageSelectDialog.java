@@ -36,6 +36,8 @@ import java.util.List;
 
 public class StorageSelectDialog extends DialogFragment implements ListView.OnItemClickListener{
 
+  // Activities/Fragments can create instances of a StorageSelectDialog and bind a listener to get its result
+
   private StorageSelectArrayAdapter mAdapter;
 
   private OnSelectListener mOnSelectListener;
@@ -66,7 +68,6 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
   }
 
   public interface OnSelectListener {
-    // you can define any parameter as per your requirement
     public void selectionCallback(StorageDevice s);
   }
 

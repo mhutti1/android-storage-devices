@@ -44,10 +44,14 @@ public class StorageDeviceUtils {
     mStorageDevices = new ArrayList<>();
 
     // Add as many possible mount points as we know about
+
+    // This is the system specified by the system as "external" it could very well be internal though
     mStorageDevices.add(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable));
 
-
+    // This is the internal directory of our app that only we can write to
     mStorageDevices.add(activity.getFilesDir().getPath());
+
+    // These are possible manufacturer sdcard mount points
     mStorageDevices.add("/storage/sdcard1");
     mStorageDevices.add("/storage/extsdcard");
     mStorageDevices.add("/storage/sdcard0/external_sdcard");
@@ -71,7 +75,7 @@ public class StorageDeviceUtils {
     mStorageDevices.add("/storage/microsd");
 
 
-
+    // Iterate through any sdcards manufacturers may have specified in Kitkat+ and add them
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       for (File file : activity.getExternalFilesDirs("")) {
         if (file != null) {
@@ -81,13 +85,15 @@ public class StorageDeviceUtils {
     }
 
 
-    // Check all devices exist and we can write to them
+    // Check all devices exist, we can write to them if required and they are not duplicates
     return checkStorageValid(writable);
   }
 
+  // Remove app specific path from directories so that we can search them from the top
   public static String generalisePath(String path, boolean writable){
-    if (writable)
+    if (writable) {
       return path;
+    }
     int endIndex = path.lastIndexOf("/Android/data/");
     if (endIndex != -1)
     {
@@ -103,6 +109,7 @@ public class StorageDeviceUtils {
     for (String device : mStorageDevices) {
       File devicePath = new File(device);
       StorageDevice storageDevice = new StorageDevice(device);
+      // Only return paths that exist, are directories, are writable (if required) and are not duplicates
       if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !contains(sizes, storageDevice.getTotalBytes())) {
         activeDevices.add(storageDevice);
         devicePaths.add(storageDevice);
@@ -112,6 +119,7 @@ public class StorageDeviceUtils {
     return activeDevices;
   }
 
+  // Check sizes passed in to a size array looking for possible duplicates
   private static boolean contains (ArrayList<Long> sizes, Long size){
     for (Long l : sizes){
       if (abs(l - size) < 10000) {

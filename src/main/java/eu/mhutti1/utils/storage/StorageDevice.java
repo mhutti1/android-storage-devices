@@ -42,10 +42,12 @@ public class StorageDevice {
     mFile = file;
   }
 
+  // Get device path
   public String getName(){
     return mFile.getPath();
   }
 
+  // Get available space on device
   public String getSize(){
     StatFs statFs = new StatFs(mFile.getPath());
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -55,24 +57,17 @@ public class StorageDevice {
     }
   }
 
-  public Long getBytes() {
-    StatFs statFs = new StatFs(mFile.getPath());
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      return statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong();
-    } else {
-      return Long.valueOf((long) statFs.getBlockSize() *  (long) statFs.getAvailableBlocks());
-    }
-  }
-
+  // Get total space on device
   public Long getTotalBytes() {
     StatFs statFs = new StatFs((mFile.getPath()));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       return statFs.getBlockSizeLong() *  statFs.getBlockCountLong();
     } else {
-      return Long.valueOf((long) statFs.getBlockSize() * (long) statFs.getBlockCount());
+      return (long) statFs.getBlockSize() * (long) statFs.getBlockCount();
     }
   }
 
+  // Convert bytes to human readable form
   public static String bytesToHuman (long size) {
     long Kb = 1  * 1024;
     long Mb = Kb * 1024;
@@ -92,7 +87,8 @@ public class StorageDevice {
     return "???";
   }
 
-  /*public ArrayList<File> getDirectories() {
+  // Get list of directories in device
+  public ArrayList<File> getDirectories() {
     ArrayList<File> folders = new ArrayList<File>(Arrays.asList(mFile.listFiles(new FileFilter() {
       @Override
       public boolean accept(File file) {
@@ -105,16 +101,7 @@ public class StorageDevice {
     }
 
     return relativeFolders;
-  }*/
-
-  /*@Override
-  public boolean equals(Object obj) {
-    if (obj instanceof StorageDevice){
-      StorageDevice device = (StorageDevice) obj;
-      return device.getDirectories().containsAll(getDirectories());
-    }
-    return false;
-  }*/
+  }
 
   public static String floatForm (double d)
   {
