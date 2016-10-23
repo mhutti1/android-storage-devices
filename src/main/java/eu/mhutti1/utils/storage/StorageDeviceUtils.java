@@ -52,6 +52,7 @@ public class StorageDeviceUtils {
     mStorageDevices.add(activity.getFilesDir().getPath());
 
     // These are possible manufacturer sdcard mount points
+    mStorageDevices.add("/storage/sdcard0");
     mStorageDevices.add("/storage/sdcard1");
     mStorageDevices.add("/storage/extsdcard");
     mStorageDevices.add("/storage/sdcard0/external_sdcard");
