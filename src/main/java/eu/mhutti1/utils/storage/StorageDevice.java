@@ -21,9 +21,15 @@ package eu.mhutti1.utils.storage;
 
 import android.os.Build;
 import android.os.StatFs;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Array;
 import java.text.DecimalFormat;
@@ -34,12 +40,24 @@ public class StorageDevice {
 
   private File mFile;
 
-  public StorageDevice(String path){
+  private String mLocationName;
+
+  private boolean mDuplicate = true;
+
+  public StorageDevice(String path, String location){
     mFile = new File(path);
+    mLocationName = location;
+    if (mFile.exists()) {
+      createLocationCode();
+    }
   }
 
-  public StorageDevice(File file){
+  public StorageDevice(File file, String location){
     mFile = file;
+    mLocationName = location;
+    if (mFile.exists()) {
+      createLocationCode();
+    }
   }
 
   // Get device path
@@ -48,13 +66,17 @@ public class StorageDevice {
   }
 
   // Get available space on device
-  public String getSize(){
+  public String getSize() {
     StatFs statFs = new StatFs(mFile.getPath());
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
       return String.valueOf(bytesToHuman(statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong()));
     } else {
       return String.valueOf(bytesToHuman((long) statFs.getBlockSize() *  (long) statFs.getAvailableBlocks()));
     }
+  }
+
+  public String getTotalSize() {
+    return bytesToHuman(getTotalBytes());
   }
 
   // Get total space on device
@@ -87,25 +109,63 @@ public class StorageDevice {
     return "???";
   }
 
-  // Get list of directories in device
-  public ArrayList<File> getDirectories() {
-    ArrayList<File> folders = new ArrayList<File>(Arrays.asList(mFile.listFiles(new FileFilter() {
-      @Override
-      public boolean accept(File file) {
-        return file.isDirectory();
-      }
-    })));
-    ArrayList<File> relativeFolders = new ArrayList<>();
-    for (File file : folders){
-      relativeFolders.add(new File(mFile.toURI().relativize(file.toURI()).getPath()));
-    }
+  public String getLocationName() {
+    return mLocationName;
+  }
 
-    return relativeFolders;
+  public File getPath() {
+    return mFile;
   }
 
   public static String floatForm (double d)
   {
     return new DecimalFormat("#.##").format(d);
+  }
+
+  public void createLocationCode() {
+    if (!getLocationCodeFromFolder(mFile)) {
+      File locationCode = new File(mFile.getPath(), ".storageLocationMarker");
+      try {
+        locationCode.createNewFile();
+        FileWriter fw = new FileWriter(locationCode);
+        fw.write(mFile.getPath());
+        fw.close();
+      } catch (IOException e) {
+        Log.d("android-storage-devices", "Unable to create marker file, duplicates may be listed");
+      }
+    }
+  }
+
+  public boolean getLocationCodeFromFolder(File folder) {
+    File locationCode = new File(folder.getPath(), ".storageLocationMarker");
+    if (locationCode.exists()) {
+      try {
+        BufferedReader br = new BufferedReader(new FileReader(locationCode));
+        if (br.readLine().equals(mFile.getPath())) {
+          mDuplicate = false;
+          br.close();
+        } else {
+          mDuplicate = true;
+          return true;
+        }
+      } catch (Exception e) {
+        return true;
+      }
+
+    }
+    String path = folder.getPath();
+    String parent = path.substring(0, path.lastIndexOf("/"));
+    if (parent.equals("")) {
+      mDuplicate = false;
+      Log.d("hello", mFile.getPath());
+      return false;
+    }
+    return getLocationCodeFromFolder(new File(parent));
+  }
+
+
+  public boolean isDuplicate() {
+    return mDuplicate;
   }
 
 }

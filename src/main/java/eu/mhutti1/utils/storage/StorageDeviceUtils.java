@@ -38,7 +38,7 @@ import static java.lang.Math.abs;
 
 
 public class StorageDeviceUtils {
-  private static ArrayList<String> mStorageDevices;
+  private static ArrayList<StorageDevice> mStorageDevices;
 
   public static ArrayList<StorageDevice> getStorageDevices(Activity activity, boolean writable) {
     mStorageDevices = new ArrayList<>();
@@ -46,41 +46,26 @@ public class StorageDeviceUtils {
     // Add as many possible mount points as we know about
 
     // This is the system specified by the system as "external" it could very well be internal though
-    mStorageDevices.add(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable));
+    mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), "Default"));
 
     // This is the internal directory of our app that only we can write to
-    mStorageDevices.add(activity.getFilesDir().getPath());
+    mStorageDevices.add(new StorageDevice(activity.getFilesDir().getPath(), "Private"));
 
     // These are possible manufacturer sdcard mount points
-    mStorageDevices.add("/storage/sdcard0");
-    mStorageDevices.add("/storage/sdcard1");
-    mStorageDevices.add("/storage/extsdcard");
-    mStorageDevices.add("/storage/sdcard0/external_sdcard");
-    mStorageDevices.add("/mnt/sdcard/external_sd");
-    mStorageDevices.add("/mnt/external_sd");
-    mStorageDevices.add("/mnt/media_rw/sdcard1");
-    mStorageDevices.add("/removable/microsd");
-    mStorageDevices.add("/mnt/emmc");
-    mStorageDevices.add("/storage/external_SD");
-    mStorageDevices.add("/storage/ext_sd");
-    mStorageDevices.add("/storage/removable/sdcard1");
-    mStorageDevices.add("/data/sdext");
-    mStorageDevices.add("/data/sdext2");
-    mStorageDevices.add("/data/sdext3");
-    mStorageDevices.add("/data/sdext2");
-    mStorageDevices.add("/data/sdext3");
-    mStorageDevices.add("/data/sdext4");
-    mStorageDevices.add("/sdcard");
-    mStorageDevices.add("/sdcard1");
-    mStorageDevices.add("/sdcard2");
-    mStorageDevices.add("/storage/microsd");
+
+    String[] paths = ExternalPaths.getPossiblePaths();
+
+    for (String path : paths){
+      mStorageDevices.add(new StorageDevice(path, "External"));
+    }
+
 
 
     // Iterate through any sdcards manufacturers may have specified in Kitkat+ and add them
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       for (File file : activity.getExternalFilesDirs("")) {
         if (file != null) {
-          mStorageDevices.add(generalisePath(file.getPath(), writable));
+          mStorageDevices.add(new StorageDevice(generalisePath(file.getPath(), writable), "External"));
         }
       }
     }
@@ -107,28 +92,15 @@ public class StorageDeviceUtils {
     ArrayList<StorageDevice> activeDevices = new ArrayList<>();
     ArrayList<StorageDevice> devicePaths = new ArrayList<>();
     ArrayList<Long> sizes = new ArrayList<>();
-    for (String device : mStorageDevices) {
-      File devicePath = new File(device);
-      StorageDevice storageDevice = new StorageDevice(device);
+    for (StorageDevice device : mStorageDevices) {
+      File devicePath = device.getPath();
       // Only return paths that exist, are directories, are writable (if required) and are not duplicates
-      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !contains(sizes, storageDevice.getTotalBytes())) {
-        activeDevices.add(storageDevice);
-        devicePaths.add(storageDevice);
-        sizes.add(storageDevice.getTotalBytes());
+      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !device.isDuplicate() && !devicePaths.contains(devicePath)) {
+        activeDevices.add(device);
+        devicePaths.add(device);
+        sizes.add(device.getTotalBytes());
       }
     }
     return activeDevices;
   }
-
-  // Check sizes passed in to a size array looking for possible duplicates
-  private static boolean contains (ArrayList<Long> sizes, Long size){
-    for (Long l : sizes){
-      if (abs(l - size) < 10000) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
 }
