@@ -31,6 +31,8 @@ ArrayList<StorageDevice> storageDevices = getStorageDevices(context, true);
 // Readable
 ArrayList<StorageDevice> storageDevices = getStorageDevices(context, false);
 ```
+Duplicates may be returned (we do our best to filter them but due to system limitations its not always possible).
+
 
 To add with jcenter add this to gradle:
 
