@@ -13,7 +13,7 @@ ext {
   siteUrl = 'https://github.com/mhutti1/android-storage-devices'
   gitUrl = 'https://github.com/mhutti1/android-storage-devices.git'
 
-  libraryVersion = '0.4.1'
+  libraryVersion = '0.4.2'
 
   developerId = 'mhutti1'
   developerName = 'Isaac Hutt'
@@ -31,8 +31,8 @@ android {
   defaultConfig {
     minSdkVersion 14
     targetSdkVersion 24
-    versionCode 14
-    versionName "0.4.1"
+    versionCode 15
+    versionName "0.4.2"
   }
   buildTypes {
     release {

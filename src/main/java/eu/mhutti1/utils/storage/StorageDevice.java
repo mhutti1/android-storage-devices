@@ -38,8 +38,10 @@ import java.util.Arrays;
 
 public class StorageDevice {
 
+  // File object containing device path
   private File mFile;
 
+  // String describing device location
   private String mLocationName;
 
   private boolean mDuplicate = true;
@@ -122,6 +124,7 @@ public class StorageDevice {
     return new DecimalFormat("#.##").format(d);
   }
 
+  // Create unique file to identify duplicate devices.
   public void createLocationCode() {
     if (!getLocationCodeFromFolder(mFile)) {
       File locationCode = new File(mFile.getPath(), ".storageLocationMarker");
@@ -136,6 +139,7 @@ public class StorageDevice {
     }
   }
 
+  // Check if there is already a device code in our path
   public boolean getLocationCodeFromFolder(File folder) {
     File locationCode = new File(folder.getPath(), ".storageLocationMarker");
     if (locationCode.exists()) {
