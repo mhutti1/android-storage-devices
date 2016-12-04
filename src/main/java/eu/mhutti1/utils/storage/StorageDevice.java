@@ -69,11 +69,15 @@ public class StorageDevice {
 
   // Get available space on device
   public String getSize() {
+    return bytesToHuman(getAvailableBytes());
+  }
+
+  public Long getAvailableBytes() {
     StatFs statFs = new StatFs(mFile.getPath());
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      return String.valueOf(bytesToHuman(statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong()));
+      return statFs.getBlockSizeLong() *  statFs.getAvailableBlocksLong();
     } else {
-      return String.valueOf(bytesToHuman((long) statFs.getBlockSize() *  (long) statFs.getAvailableBlocks()));
+      return (long) statFs.getBlockSize() *  (long) statFs.getAvailableBlocks();
     }
   }
 
@@ -121,7 +125,7 @@ public class StorageDevice {
 
   public static String floatForm (double d)
   {
-    return new DecimalFormat("#.##").format(d);
+    return new DecimalFormat("#.#").format(d);
   }
 
   // Create unique file to identify duplicate devices.
@@ -161,7 +165,6 @@ public class StorageDevice {
     String parent = path.substring(0, path.lastIndexOf("/"));
     if (parent.equals("")) {
       mDuplicate = false;
-      Log.d("hello", mFile.getPath());
       return false;
     }
     return getLocationCodeFromFolder(new File(parent));

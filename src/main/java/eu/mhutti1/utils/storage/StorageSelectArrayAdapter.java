@@ -51,7 +51,7 @@ public class StorageSelectArrayAdapter extends ArrayAdapter<StorageDevice>{
       holder = (ViewHolder) convertView.getTag();
     }
     StorageDevice device = getItem(position);
-    holder.fileName.setText(device.getLocationName() + ":");
+    holder.fileName.setText(device.getLocationName());
     holder.fileSize.setText(device.getSize() + " / " + device.getTotalSize());
 
     return convertView;

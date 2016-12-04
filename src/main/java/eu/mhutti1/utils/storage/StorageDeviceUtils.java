@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 
 import static java.lang.Math.abs;
 
@@ -45,11 +46,16 @@ public class StorageDeviceUtils {
 
     // Add as many possible mount points as we know about
 
-    // This is the system specified by the system as "external" it could very well be internal though
-    mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), "Default"));
-
-    // This is the internal directory of our app that only we can write to
-    mStorageDevices.add(new StorageDevice(activity.getFilesDir().getPath(), "Private"));
+    // Only add this device if its very likely that we have missed a users sd card
+    if (Environment.isExternalStorageEmulated()) {
+      // This is our internal storage directory
+      mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), "Internal"));
+    } else {
+      // This is the internal directory of our app that only we can write to
+      mStorageDevices.add(new StorageDevice(activity.getFilesDir().getPath(), "Internal"));
+      // This is an external storage directory
+      mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), "External"));
+    }
 
     // These are possible manufacturer sdcard mount points
 
