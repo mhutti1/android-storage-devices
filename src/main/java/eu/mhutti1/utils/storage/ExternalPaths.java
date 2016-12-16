@@ -44,7 +44,9 @@ public class ExternalPaths {
       "/sdcard",
       "/sdcard1",
       "/sdcard2",
-      "/storage/microsd"
+      "/storage/microsd",
+      "/mnt/extsd",
+      "/extsd"
   };
 
 
