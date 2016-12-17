@@ -30,6 +30,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -61,10 +62,24 @@ public class StorageDeviceUtils {
 
     String[] paths = ExternalPaths.getPossiblePaths();
 
-    for (String path : paths){
-      mStorageDevices.add(new StorageDevice(path, "External"));
+    for (String path : paths) {
+      if (path.endsWith("*")) {
+        File root = new File(path.substring(0, path.length() - 1));
+          File[] directories = root.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+              return file.isDirectory();
+            }
+          });
+          if (directories != null) {
+            for (File dir : directories) {
+              mStorageDevices.add(new StorageDevice(dir, "External"));
+            }
+          }
+      } else {
+        mStorageDevices.add(new StorageDevice(path, "External"));
+      }
     }
-
 
 
     // Iterate through any sdcards manufacturers may have specified in Kitkat+ and add them
@@ -82,13 +97,12 @@ public class StorageDeviceUtils {
   }
 
   // Remove app specific path from directories so that we can search them from the top
-  public static String generalisePath(String path, boolean writable){
+  public static String generalisePath(String path, boolean writable) {
     if (writable) {
       return path;
     }
     int endIndex = path.lastIndexOf("/Android/data/");
-    if (endIndex != -1)
-    {
+    if (endIndex != -1) {
       return path.substring(0, endIndex);
     }
     return path;

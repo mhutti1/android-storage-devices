@@ -29,7 +29,7 @@ public class ExternalPaths {
       "/storage/sdcard0/external_sdcard",
       "/mnt/sdcard/external_sd",
       "/mnt/external_sd",
-      "/mnt/media_rw/sdcard1",
+      "/mnt/media_rw/*",
       "/removable/microsd",
       "/mnt/emmc",
       "/storage/external_SD",
