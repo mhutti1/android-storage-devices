@@ -44,13 +44,21 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
 
   private String mTitle;
 
+  private String mInternal = "Internal";
+
+  private String mExternal = "External";
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.storage_select_dialog, container, false);
     TextView title = (TextView) rootView.findViewById(R.id.title);
+    if (getArguments() != null) {
+      mInternal = getArguments().getString("INTERNAL", mInternal);
+      mExternal = getArguments().getString("EXTERNAL", mExternal);
+    }
     title.setText(mTitle);
     ListView listView = (ListView) rootView.findViewById(R.id.device_list);
-    mAdapter = new StorageSelectArrayAdapter(getActivity(),0,StorageDeviceUtils.getStorageDevices(getActivity(), true));
+    mAdapter = new StorageSelectArrayAdapter(getActivity(),0,StorageDeviceUtils.getStorageDevices(getActivity(), true), mInternal, mExternal);
     listView.setAdapter(mAdapter);
     listView.setOnItemClickListener(this);
     return rootView;

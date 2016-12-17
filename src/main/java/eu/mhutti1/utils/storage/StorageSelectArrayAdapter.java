@@ -32,9 +32,15 @@ public class StorageSelectArrayAdapter extends ArrayAdapter<StorageDevice>{
 
   private ArrayList<StorageDevice> mStorageDevices;
 
-  public StorageSelectArrayAdapter(Context context, int resource, ArrayList<StorageDevice> devices) {
+  private String mInternal;
+
+  private String mExternal;
+
+  public StorageSelectArrayAdapter(Context context, int resource, ArrayList<StorageDevice> devices, String internal, String external) {
     super(context, resource, devices);
     mStorageDevices = devices;
+    mInternal = internal;
+    mExternal = external;
   }
 
   @Override
@@ -51,7 +57,11 @@ public class StorageSelectArrayAdapter extends ArrayAdapter<StorageDevice>{
       holder = (ViewHolder) convertView.getTag();
     }
     StorageDevice device = getItem(position);
-    holder.fileName.setText(device.getLocationName());
+    if (device.isInternal()) {
+      holder.fileName.setText(mInternal);
+    } else {
+      holder.fileName.setText(mExternal);
+    }
     holder.fileSize.setText(device.getSize() + " / " + device.getTotalSize());
 
     return convertView;

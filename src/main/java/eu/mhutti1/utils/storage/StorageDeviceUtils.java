@@ -50,12 +50,12 @@ public class StorageDeviceUtils {
     // Only add this device if its very likely that we have missed a users sd card
     if (Environment.isExternalStorageEmulated()) {
       // This is our internal storage directory
-      mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), "Internal"));
+      mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), true));
     } else {
       // This is the internal directory of our app that only we can write to
-      mStorageDevices.add(new StorageDevice(activity.getFilesDir().getPath(), "Internal"));
+      mStorageDevices.add(new StorageDevice(activity.getFilesDir().getPath(), true));
       // This is an external storage directory
-      mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), "External"));
+      mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), false));
     }
 
     // These are possible manufacturer sdcard mount points
@@ -73,11 +73,11 @@ public class StorageDeviceUtils {
           });
           if (directories != null) {
             for (File dir : directories) {
-              mStorageDevices.add(new StorageDevice(dir, "External"));
+              mStorageDevices.add(new StorageDevice(dir, false));
             }
           }
       } else {
-        mStorageDevices.add(new StorageDevice(path, "External"));
+        mStorageDevices.add(new StorageDevice(path, false));
       }
     }
 
@@ -86,7 +86,7 @@ public class StorageDeviceUtils {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       for (File file : activity.getExternalFilesDirs("")) {
         if (file != null) {
-          mStorageDevices.add(new StorageDevice(generalisePath(file.getPath(), writable), "External"));
+          mStorageDevices.add(new StorageDevice(generalisePath(file.getPath(), writable), false));
         }
       }
     }

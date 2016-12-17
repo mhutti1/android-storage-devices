@@ -41,22 +41,21 @@ public class StorageDevice {
   // File object containing device path
   private File mFile;
 
-  // String describing device location
-  private String mLocationName;
+  private boolean mInternal;
 
   private boolean mDuplicate = true;
 
-  public StorageDevice(String path, String location){
+  public StorageDevice(String path, boolean internal){
     mFile = new File(path);
-    mLocationName = location;
+    mInternal = internal;
     if (mFile.exists()) {
       createLocationCode();
     }
   }
 
-  public StorageDevice(File file, String location){
+  public StorageDevice(File file, boolean internal){
     mFile = file;
-    mLocationName = location;
+    mInternal = internal;
     if (mFile.exists()) {
       createLocationCode();
     }
@@ -115,8 +114,8 @@ public class StorageDevice {
     return "???";
   }
 
-  public String getLocationName() {
-    return mLocationName;
+  public boolean isInternal() {
+    return mInternal;
   }
 
   public File getPath() {
