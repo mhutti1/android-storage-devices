@@ -33,9 +33,13 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
+import static android.R.attr.path;
 import static java.lang.Math.abs;
 
 
@@ -65,22 +69,21 @@ public class StorageDeviceUtils {
     for (String path : paths) {
       if (path.endsWith("*")) {
         File root = new File(path.substring(0, path.length() - 1));
-          File[] directories = root.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-              return file.isDirectory();
-            }
-          });
-          if (directories != null) {
-            for (File dir : directories) {
-              mStorageDevices.add(new StorageDevice(dir, false));
-            }
+        File[] directories = root.listFiles(new FileFilter() {
+          @Override
+          public boolean accept(File file) {
+            return file.isDirectory();
           }
+        });
+        if (directories != null) {
+          for (File dir : directories) {
+            mStorageDevices.add(new StorageDevice(dir, false));
+          }
+        }
       } else {
         mStorageDevices.add(new StorageDevice(path, false));
       }
     }
-
 
     // Iterate through any sdcards manufacturers may have specified in Kitkat+ and add them
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -115,7 +118,7 @@ public class StorageDeviceUtils {
     for (StorageDevice device : mStorageDevices) {
       File devicePath = device.getPath();
       // Only return paths that exist, are directories, are writable (if required) and are not duplicates
-      if (devicePath.exists() && devicePath.isDirectory() && (devicePath.canWrite() || !writable) && !device.isDuplicate() && !devicePaths.contains(devicePath)) {
+      if (devicePath.exists() && devicePath.isDirectory() && (canWrite(devicePath) || !writable) && !device.isDuplicate() && !devicePaths.contains(devicePath)) {
         activeDevices.add(device);
         devicePaths.add(device);
         sizes.add(device.getTotalBytes());
@@ -123,4 +126,20 @@ public class StorageDeviceUtils {
     }
     return activeDevices;
   }
+
+  // Amazingly file.canWrite() does not always return the correct value
+  private static boolean canWrite(File file) {
+    try {
+      RandomAccessFile randomAccessFile = new RandomAccessFile(file + "/test.txt", "rw");
+      FileChannel fileChannel = randomAccessFile.getChannel();
+      FileLock fileLock = fileChannel.lock();
+      fileLock.release();
+      fileChannel.close();
+      randomAccessFile.close();
+      return true;
+    } catch (Exception ex) {
+      return false;
+    }
+  }
 }
+
