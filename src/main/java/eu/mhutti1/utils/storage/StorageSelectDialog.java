@@ -38,6 +38,12 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
 
   // Activities/Fragments can create instances of a StorageSelectDialog and bind a listener to get its result
 
+  public static final String STORAGE_DIALOG_THEME = "THEME";
+
+  public static final String STORAGE_DIALOG_INTERNAL = "INTERNAL";
+
+  public static final String STORAGE_DIALOG_EXTERNAL = "EXTERNAL";
+
   private StorageSelectArrayAdapter mAdapter;
 
   private OnSelectListener mOnSelectListener;
@@ -49,13 +55,23 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
   private String mExternal = "External";
 
   @Override
+  public void onCreate(Bundle savedInstanceState) {
+    if (getArguments() != null) {
+      // Set string values
+      mInternal = getArguments().getString(STORAGE_DIALOG_INTERNAL, mInternal);
+      mExternal = getArguments().getString(STORAGE_DIALOG_EXTERNAL, mExternal);
+      // Set the theme to a supplied value
+      if (getArguments().containsKey(STORAGE_DIALOG_THEME)) {
+        setStyle(DialogFragment.STYLE_NORMAL, getArguments().getInt(STORAGE_DIALOG_THEME));
+      }
+    }
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.storage_select_dialog, container, false);
     TextView title = (TextView) rootView.findViewById(R.id.title);
-    if (getArguments() != null) {
-      mInternal = getArguments().getString("INTERNAL", mInternal);
-      mExternal = getArguments().getString("EXTERNAL", mExternal);
-    }
     title.setText(mTitle);
     ListView listView = (ListView) rootView.findViewById(R.id.device_list);
     mAdapter = new StorageSelectArrayAdapter(getActivity(),0,StorageDeviceUtils.getStorageDevices(getActivity(), true), mInternal, mExternal);
