@@ -20,8 +20,8 @@
 package eu.mhutti1.utils.storage;
 
 
-import android.app.DialogFragment;
-import android.app.FragmentManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

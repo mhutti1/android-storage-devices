@@ -37,5 +37,5 @@ Duplicates may be returned (we do our best to filter them but due to system limi
 To add with jcenter add this to gradle:
 
 ```Gradle
-compile 'eu.mhutti1.utils.storage:android-storage-devices:0.4.8'
+compile 'eu.mhutti1.utils.storage:android-storage-devices:0.4.9'
 ```
