@@ -17,18 +17,26 @@
  * MA 02110-1301, USA.
  */
 
-package eu.mhutti1.utils.storage;
+package eu.mhutti1.utils.storage.support;
 
 
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import eu.mhutti1.utils.storage.R;
+import eu.mhutti1.utils.storage.StorageDevice;
+import eu.mhutti1.utils.storage.StorageDeviceUtils;
+import eu.mhutti1.utils.storage.StorageSelectArrayAdapter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StorageSelectDialog extends DialogFragment implements ListView.OnItemClickListener{
 
