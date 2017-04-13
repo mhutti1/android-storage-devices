@@ -22,6 +22,7 @@ package eu.mhutti1.utils.storage;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
@@ -46,7 +47,7 @@ import static java.lang.Math.abs;
 public class StorageDeviceUtils {
   private static ArrayList<StorageDevice> mStorageDevices;
 
-  public static ArrayList<StorageDevice> getStorageDevices(Activity activity, boolean writable) {
+  public static ArrayList<StorageDevice> getStorageDevices(Context context, boolean writable) {
     mStorageDevices = new ArrayList<>();
 
     // Add as many possible mount points as we know about
@@ -57,7 +58,7 @@ public class StorageDeviceUtils {
       mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), true));
     } else {
       // This is the internal directory of our app that only we can write to
-      mStorageDevices.add(new StorageDevice(activity.getFilesDir().getPath(), true));
+      mStorageDevices.add(new StorageDevice(context.getFilesDir().getPath(), true));
       // This is an external storage directory
       mStorageDevices.add(new StorageDevice(generalisePath(Environment.getExternalStorageDirectory().getPath(), writable), false));
     }
@@ -87,7 +88,7 @@ public class StorageDeviceUtils {
 
     // Iterate through any sdcards manufacturers may have specified in Kitkat+ and add them
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      for (File file : activity.getExternalFilesDirs("")) {
+      for (File file : context.getExternalFilesDirs("")) {
         if (file != null) {
           mStorageDevices.add(new StorageDevice(generalisePath(file.getPath(), writable), false));
         }
