@@ -25,10 +25,14 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import java.io.File;
 
 public class StorageSelectDialog extends DialogFragment implements ListView.OnItemClickListener{
 
@@ -69,11 +73,24 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
     View rootView = inflater.inflate(R.layout.storage_select_dialog, container, false);
     TextView title = (TextView) rootView.findViewById(R.id.title);
     title.setText(mTitle);
-    ListView listView = (ListView) rootView.findViewById(R.id.device_list);
+    final ListView listView = (ListView) rootView.findViewById(R.id.device_list);
     mAdapter = new StorageSelectArrayAdapter(getActivity(),0,
         StorageDeviceUtils.getStorageDevices(getActivity(), true), mInternal, mExternal);
     listView.setAdapter(mAdapter);
     listView.setOnItemClickListener(this);
+    Button button = (Button) rootView.findViewById(R.id.button);
+    final EditText editText = (EditText) rootView.findViewById(R.id.editText);
+    button.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (editText.getText().length() != 0) {
+          String path = editText.getText().toString();
+          if(new File(path).exists()) {
+            mAdapter.add(new StorageDevice(path, false));
+          }
+        }
+      }
+    });
     return rootView;
   }
 

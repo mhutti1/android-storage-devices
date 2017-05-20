@@ -5,11 +5,12 @@
   android:layout_height="match_parent">
 
   <TextView
+    android:id="@+id/title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_weight="1"
     android:textAlignment="center"
-    android:textSize="22sp"
-    android:id="@+id/title"/>
+    android:textSize="22sp"/>
 
   <ListView
     android:layout_width="wrap_content"
@@ -18,6 +19,25 @@
 
 
   </ListView>
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <EditText
+      android:id="@+id/editText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:ems="10"
+      android:inputType="textPersonName"
+      android:text="/"/>
+    <Button
+      android:id="@+id/button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:text="+"/>
+  </LinearLayout>
 
 
 </LinearLayout>
