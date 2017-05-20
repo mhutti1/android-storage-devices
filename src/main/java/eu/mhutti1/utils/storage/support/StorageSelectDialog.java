@@ -25,9 +25,12 @@ import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +38,7 @@ import eu.mhutti1.utils.storage.R;
 import eu.mhutti1.utils.storage.StorageDevice;
 import eu.mhutti1.utils.storage.StorageDeviceUtils;
 import eu.mhutti1.utils.storage.StorageSelectArrayAdapter;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +86,19 @@ public class StorageSelectDialog extends DialogFragment implements ListView.OnIt
         StorageDeviceUtils.getStorageDevices(getActivity(), true), mInternal, mExternal);
     listView.setAdapter(mAdapter);
     listView.setOnItemClickListener(this);
+    Button button = (Button) rootView.findViewById(R.id.button);
+    final EditText editText = (EditText) rootView.findViewById(R.id.editText);
+    button.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (editText.getText().length() != 0) {
+          String path = editText.getText().toString();
+          if(new File(path).exists()) {
+            mAdapter.add(new StorageDevice(path, false));
+          }
+        }
+      }
+    });
     return rootView;
   }
 
